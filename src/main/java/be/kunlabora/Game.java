@@ -7,9 +7,27 @@ public class Game {
 
     private List<Ship> ships = new ArrayList<>();
 
-    public void placeShip(int start, int end) {
+    public String placeShip(int start, int end) {
         Ship aShip = new Ship(start, end);
-        ships.add(aShip);
+        if (verifyShipPosition(aShip)) {
+            this.ships.add(aShip);
+            return "Ship successfully placed";
+        } else {
+            return "Ship cannot overlap with an already placed ship! Try again.";
+        }
+
+    }
+
+    public boolean verifyShipPosition(Ship newShip) {
+        if (!this.ships.isEmpty()) {
+            for (Ship ship : this.ships) {
+                if ((newShip.getStart() >= ship.getStart() && newShip.getStart() <= ship.getEnd()) ||
+                        (newShip.getEnd() >= ship.getStart() && newShip.getEnd() <= ship.getEnd())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public String render() {
@@ -39,4 +57,6 @@ public class Game {
         }
         return output.toString();
     }
+
+
 }

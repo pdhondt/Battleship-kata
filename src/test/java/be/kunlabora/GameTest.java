@@ -34,9 +34,10 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(1, 5);
+//        aGame.placeShip(1, 5);
 
         //then
+        Assertions.assertThat(aGame.placeShip(1, 5)).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render()).isEqualTo("""
                 🚢🚢🚢🚢🚢🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -49,7 +50,6 @@ public class GameTest {
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 """);
-
     }
 
     @Test
@@ -58,11 +58,14 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(4, 8);
-        aGame.placeShip(35, 37);
-        aGame.placeShip(59, 63);
+//        aGame.placeShip(4, 8);
+//        aGame.placeShip(35, 37);
+//        aGame.placeShip(59, 63);
 
         //then
+        Assertions.assertThat(aGame.placeShip(4, 8)).isEqualTo("Ship successfully placed");
+        Assertions.assertThat(aGame.placeShip(35, 37)).isEqualTo("Ship successfully placed");
+        Assertions.assertThat(aGame.placeShip(59, 63)).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render()).isEqualTo("""
                 🌊🌊🌊🚢🚢🚢🚢🚢🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -75,5 +78,19 @@ public class GameTest {
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 """);
+    }
+
+    @Test
+    void aShipCannotOverlapAnotherShip() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        aGame.placeShip(4, 8);
+//        aGame.placeShip(2, 4);
+
+        //then
+        Assertions.assertThat(aGame.placeShip(2,4))
+                .isEqualTo("Ship cannot overlap with an already placed ship! Try again.");
     }
 }
