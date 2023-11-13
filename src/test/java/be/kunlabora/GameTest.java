@@ -34,11 +34,10 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-//        aGame.placeShip(1, 5);
+        String placeShipResult = aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL);
 
         //then
-        Assertions.assertThat(aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL))
-                .isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render()).isEqualTo("""
                 🚢🚢🚢🚢🚢🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -59,19 +58,16 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-//        aGame.placeShip(4, 8);
-//        aGame.placeShip(35, 37);
-//        aGame.placeShip(59, 63);
+        String placeShipResult1 = aGame.placeShip(ShipType.CARRIER,1, 4, Orientation.HORIZONTAL);
+        String placeShipResult2 = aGame.placeShip(ShipType.DESTROYER,4, 5, Orientation.HORIZONTAL);
+        String placeShipResult3 = aGame.placeShip(ShipType.PATROLBOAT,6, 9, Orientation.HORIZONTAL);
+        String placeShipResult4 = aGame.placeShip(ShipType.SUBMARINE,7, 1, Orientation.HORIZONTAL);
 
         //then
-        Assertions.assertThat(aGame.placeShip(ShipType.CARRIER,1, 4, Orientation.HORIZONTAL))
-                .isEqualTo("Ship successfully placed");
-        Assertions.assertThat(aGame.placeShip(ShipType.DESTROYER,4, 5, Orientation.HORIZONTAL))
-                .isEqualTo("Ship successfully placed");
-        Assertions.assertThat(aGame.placeShip(ShipType.PATROLBOAT,6, 9, Orientation.HORIZONTAL))
-                .isEqualTo("Ship successfully placed");
-        Assertions.assertThat(aGame.placeShip(ShipType.SUBMARINE,7, 1, Orientation.HORIZONTAL))
-                .isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult1).isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult2).isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult3).isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult4).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render()).isEqualTo("""
                 🌊🌊🌊🚢🚢🚢🚢🚢🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -93,7 +89,6 @@ public class GameTest {
 
         //when
         aGame.placeShip(ShipType.CARRIER,4, 5, Orientation.HORIZONTAL);
-//        aGame.placeShip(2, 4);
 
         //then
         Assertions.assertThat(aGame.placeShip(ShipType.CARRIER, 4,1, Orientation.HORIZONTAL))
@@ -106,11 +101,10 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-//        aGame.placeShipVertically(1, 3);
+        String placeShipResult = aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.VERTICAL);
 
         //then
-        Assertions.assertThat(aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.VERTICAL))
-                .isEqualTo("Ship successfully placed");
+        Assertions.assertThat(placeShipResult).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render()).isEqualTo("""
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
