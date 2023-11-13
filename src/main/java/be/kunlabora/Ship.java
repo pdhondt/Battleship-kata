@@ -1,19 +1,35 @@
 package be.kunlabora;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ship {
-    private final int start;
-    private final int end;
+    private final ShipType shipType;
+    private final Coordinate startPosition;
 
-    public Ship(int start, int end) {
-        this.start = start;
-        this.end = end;
+    private final Orientation orientation;
+
+    private List<Coordinate> coordinates = new ArrayList<>();
+    public Ship(ShipType shipType, Coordinate startPosition, Orientation orientation) {
+        this.shipType = shipType;
+        this.startPosition = startPosition;
+        this.orientation = orientation;
+        this.coordinates.add(startPosition);
     }
 
-    public int getStart() {
-        return start;
+    public List<Coordinate> getCoordinates() {
+        return coordinates;
     }
 
-    public int getEnd() {
-        return end;
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public Coordinate getStartPosition() {
+        return startPosition;
+    }
+
+    public ShipType getShipType() {
+        return shipType;
     }
 }

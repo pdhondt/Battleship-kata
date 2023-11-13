@@ -7,23 +7,31 @@ public class Game {
 
     private List<Ship> ships = new ArrayList<>();
 
-    public String placeShip(int start, int end) {
-        Ship aShip = new Ship(start, end);
+    public String placeShip(ShipType shipType, int x, int y, Orientation orientation) {
+        Ship aShip = new Ship(shipType, new Coordinate(x, y), orientation);
+        for (int i = 1; i < aShip.getShipType().getLength(); i++) {
+            if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
+                aShip.getCoordinates().add(new Coordinate(x, y + i));
+            }
+            if (aShip.getOrientation().equals(Orientation.VERTICAL)) {
+                aShip.getCoordinates().add(new Coordinate(x + i, y));
+            }
+        }
         if (verifyShipPosition(aShip)) {
             this.ships.add(aShip);
             return "Ship successfully placed";
         } else {
             return "Ship cannot overlap with an already placed ship! Try again.";
         }
-
     }
 
     public boolean verifyShipPosition(Ship newShip) {
         if (!this.ships.isEmpty()) {
-            for (Ship ship : this.ships) {
-                if ((newShip.getStart() >= ship.getStart() && newShip.getStart() <= ship.getEnd()) ||
-                        (newShip.getEnd() >= ship.getStart() && newShip.getEnd() <= ship.getEnd())) {
-                    return false;
+            for (Coordinate coordinate : newShip.getCoordinates()) {
+                for (Ship ship : this.ships) {
+                    if (ship.getCoordinates().contains(coordinate)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -35,28 +43,27 @@ public class Game {
         StringBuilder output = new StringBuilder();
         String newLine = System.getProperty("line.separator");
 
-        for (int i = 1; i <= 100; i++) {
-            boolean isShipPresent = false;
-
-            for (Ship ship : this.ships) {
-                if (i >= ship.getStart() && i <= ship.getEnd()) {
-                    isShipPresent = true;
-                    break;
+        for (int i = 1; i <= 10; i++) {
+            for (int j = 1; j <= 10; j++) {
+                boolean isShipPresent = false;
+                for (Ship ship : this.ships) {
+                    for (Coordinate coordinate : ship.getCoordinates()) {
+                        if (i == coordinate.x() && j == coordinate.y()) {
+                            isShipPresent = true;
+                            break;
+                        }
+                    }
                 }
-            }
-
-            if (isShipPresent) {
-                output.append(Icon.SHIP.getIcon());
-            } else {
-                output.append(Icon.WAVE.getIcon());
-            }
-
-            if (i % 10 == 0) {
-                output.append(newLine);
+                if (isShipPresent) {
+                    output.append(Icon.SHIP.getIcon());
+                } else {
+                    output.append(Icon.WAVE.getIcon());
+                }
+                if (j == 10) {
+                    output.append(newLine);
+                }
             }
         }
         return output.toString();
     }
-
-
 }
