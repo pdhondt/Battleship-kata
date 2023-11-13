@@ -1,7 +1,7 @@
 package be.kunlabora;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Ship {
     private final ShipType shipType;
@@ -9,7 +9,7 @@ public class Ship {
 
     private final Orientation orientation;
 
-    private List<Coordinate> coordinates = new ArrayList<>();
+    private Set<Coordinate> coordinates = new HashSet<>();
     public Ship(ShipType shipType, Coordinate startPosition, Orientation orientation) {
         this.shipType = shipType;
         this.startPosition = startPosition;
@@ -17,7 +17,7 @@ public class Ship {
         this.coordinates.add(startPosition);
     }
 
-    public List<Coordinate> getCoordinates() {
+    public Set<Coordinate> getCoordinates() {
         return coordinates;
     }
 
