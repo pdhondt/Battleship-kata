@@ -133,4 +133,17 @@ public class GameTest {
         Assertions.assertThat(placeShipResult2).isEqualTo("Ship is too long and exceeds column limits");
     }
 
+    @Test
+    void placingASecondShipOfTheSameTypeReturnsAWarningMessage() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        aGame.placeShip(ShipType.SUBMARINE, 1, 1, Orientation.HORIZONTAL);
+        String placeShipResult = aGame.placeShip(ShipType.SUBMARINE, 3, 3, Orientation.VERTICAL);
+
+        //then
+        Assertions.assertThat(placeShipResult)
+                .isEqualTo("You already placed a ship of this type. Choose another type.");
+    }
 }

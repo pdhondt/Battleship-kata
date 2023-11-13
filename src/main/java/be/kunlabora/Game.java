@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-
     private List<Ship> ships = new ArrayList<>();
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation) {
+        for (Ship ship : this.ships) {
+            if (ship.getShipType().equals(shipType)) {
+                return "You already placed a ship of this type. Choose another type.";
+            }
+        }
         Ship aShip = new Ship(shipType, new Coordinate(x, y), orientation);
         for (int i = 1; i < aShip.getShipType().getLength(); i++) {
             if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
