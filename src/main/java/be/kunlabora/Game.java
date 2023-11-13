@@ -11,10 +11,18 @@ public class Game {
         Ship aShip = new Ship(shipType, new Coordinate(x, y), orientation);
         for (int i = 1; i < aShip.getShipType().getLength(); i++) {
             if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
-                aShip.getCoordinates().add(new Coordinate(x, y + i));
+                if (verifyPositionWithinLimits(y + i)) {
+                    aShip.getCoordinates().add(new Coordinate(x, y + i));
+                } else {
+                    return "Ship is too long and exceeds row limits";
+                }
             }
             if (aShip.getOrientation().equals(Orientation.VERTICAL)) {
-                aShip.getCoordinates().add(new Coordinate(x + i, y));
+                if (verifyPositionWithinLimits(x + i)) {
+                    aShip.getCoordinates().add(new Coordinate(x + i, y));
+                } else {
+                    return "Ship is too long and exceeds column limits";
+                }
             }
         }
         if (verifyShipPosition(aShip)) {
@@ -36,6 +44,10 @@ public class Game {
             }
         }
         return true;
+    }
+
+    public boolean verifyPositionWithinLimits(int position) {
+        return position <= 10;
     }
 
     public String render() {

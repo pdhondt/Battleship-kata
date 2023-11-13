@@ -119,4 +119,18 @@ public class GameTest {
                 """);
     }
 
+    @Test
+    void placeShipCannotExceedOceanLimits() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        String placeShipResult1 = aGame.placeShip(ShipType.BATTLESHIP, 2,8, Orientation.HORIZONTAL);
+        String placeShipResult2 = aGame.placeShip(ShipType.BATTLESHIP, 8,2, Orientation.VERTICAL);
+
+        //then
+        Assertions.assertThat(placeShipResult1).isEqualTo("Ship is too long and exceeds row limits");
+        Assertions.assertThat(placeShipResult2).isEqualTo("Ship is too long and exceeds column limits");
+    }
+
 }
