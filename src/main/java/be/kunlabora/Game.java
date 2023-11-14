@@ -2,6 +2,7 @@ package be.kunlabora;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Game {
     private List<Ship> ships = new ArrayList<>();
@@ -86,8 +87,14 @@ public class Game {
     public String fire(int x, int y) {
         Coordinate firedAt = new Coordinate(x, y);
         for (Ship ship : this.ships) {
-            if (ship.getCoordinates().contains(firedAt)) {
-                return "Hit!";
+            Set<Coordinate> coordinates = ship.getCoordinates();
+            if (coordinates.contains(firedAt)) {
+                coordinates.remove(firedAt);
+                if (coordinates.isEmpty()) {
+                    return "Ship Destroyed and Sinking!";
+                } else {
+                    return "Hit!";
+                }
             }
         }
         return "Miss!";

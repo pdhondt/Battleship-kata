@@ -171,4 +171,18 @@ public class GameTest {
         //then
         Assertions.assertThat(fireResult).isEqualTo("Hit!");
     }
+
+    @Test
+    void firingAndSinkingAShip() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        aGame.placeShip(ShipType.PATROLBOAT, 1, 1, Orientation.HORIZONTAL);
+        aGame.fire(1, 1);
+        String fireResult = aGame.fire(1, 2);
+
+        //then
+        Assertions.assertThat(fireResult).isEqualTo("Ship Destroyed and Sinking!");
+    }
 }
