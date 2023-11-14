@@ -88,7 +88,7 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(ShipType.CARRIER,4, 5, Orientation.HORIZONTAL);
+        aGame.placeShip(ShipType.BATTLESHIP,4, 5, Orientation.HORIZONTAL);
 
         //then
         Assertions.assertThat(aGame.placeShip(ShipType.CARRIER, 4,1, Orientation.HORIZONTAL))
