@@ -146,4 +146,17 @@ public class GameTest {
         Assertions.assertThat(placeShipResult)
                 .isEqualTo("You already placed a ship of this type. Choose another type.");
     }
+
+    @Test
+    void firingAndMissing() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        aGame.placeShip(ShipType.DESTROYER, 1,1, Orientation.HORIZONTAL);
+        String fireResult = aGame.fire(1,4);
+
+        //then
+        Assertions.assertThat(fireResult).isEqualTo("Miss!");
+    }
 }

@@ -82,4 +82,14 @@ public class Game {
         }
         return output.toString();
     }
+
+    public String fire(int x, int y) {
+        Coordinate firedAt = new Coordinate(x, y);
+        for (Ship ship : this.ships) {
+            if (ship.getCoordinates().contains(firedAt)) {
+                return "Hit!";
+            }
+        }
+        return "Miss!";
+    }
 }
