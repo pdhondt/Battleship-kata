@@ -21,4 +21,7 @@ public class Ship {
     public ShipType getShipType() {
         return shipType;
     }
+    public void setCoordinates(Set<Coordinate> coordinates) {
+        this.coordinates = coordinates;
+    }
 }
