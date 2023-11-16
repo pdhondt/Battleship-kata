@@ -226,4 +226,37 @@ public class GameTest {
         //then
         Assertions.assertThat(placeShipResult).isEqualTo("All 5 shiptypes have been placed!");
     }
+
+    @Test
+    void checkWinner() {
+        //given
+        Game aGame = new Game();
+        aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.BATTLESHIP, 2, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.DESTROYER, 3, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.SUBMARINE, 4, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.PATROLBOAT, 5, 1, Orientation.HORIZONTAL, 1);
+
+        //when
+        aGame.fire(1, 1, 2);
+        aGame.fire(1, 2, 2);
+        aGame.fire(1, 3, 2);
+        aGame.fire(1, 4, 2);
+        aGame.fire(1, 5, 2);
+        aGame.fire(2, 1, 2);
+        aGame.fire(2, 2, 2);
+        aGame.fire(2, 3, 2);
+        aGame.fire(2, 4, 2);
+        aGame.fire(3, 1, 2);
+        aGame.fire(3, 2, 2);
+        aGame.fire(3, 3, 2);
+        aGame.fire(4, 1, 2);
+        aGame.fire(4, 2, 2);
+        aGame.fire(4, 3, 2);
+        aGame.fire(5, 1, 2);
+        String fireResult = aGame.fire(5, 2, 2);
+
+        //then
+        Assertions.assertThat(fireResult).isEqualTo("All ships destroyed, player 2 wins!");
+    }
 }

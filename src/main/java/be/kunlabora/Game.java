@@ -116,6 +116,9 @@ public class Game {
                 coordinates.add(hit);
                 ship.setCoordinates(coordinates);
                 if (checkDestroyed(ship)) {
+                    if (checkWinner(shipsOtherPlayer)) {
+                        return "All ships destroyed, player " + currentPlayer + " wins!";
+                    }
                     return "Ship Destroyed and Sinking!";
                 } else {
                     return "Hit!";
@@ -141,6 +144,18 @@ public class Game {
             return true;
         }
         return false;
+    }
+
+    public boolean checkWinner(List<Ship> ships) {
+        int countSunken = 0;
+        for (Ship ship : ships) {
+            for (Coordinate coordinate : ship.getCoordinates()) {
+                if (coordinate.getStatus().equals(Icon.SINK)) {
+                    countSunken++;
+                }
+            }
+        }
+        return countSunken == 17;
     }
 
     public void askUserInput() {
