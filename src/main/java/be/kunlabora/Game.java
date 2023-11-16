@@ -6,11 +6,13 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Game {
-    private List<Ship> ships = new ArrayList<>();
-
-    public String placeShip(ShipType shipType, int x, int y, Orientation orientation) {
-        if (this.ships.size() < 5) {
-            for (Ship ship : this.ships) {
+    private List<Ship> shipsPlayer1 = new ArrayList<>();
+    private List<Ship> shipsPlayer2 = new ArrayList<>();
+    private List<Ship> shipsCurrentPlayer = new ArrayList<>();
+    public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
+        shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+        if (shipsCurrentPlayer.size() < 5) {
+            for (Ship ship : shipsCurrentPlayer) {
                 if (ship.getShipType().equals(shipType)) {
                     return "You already placed a ship of this type. Choose another type.";
                 }
@@ -32,8 +34,8 @@ public class Game {
                     }
                 }
             }
-            if (verifyShipPosition(aShip)) {
-                this.ships.add(aShip);
+            if (verifyShipPosition(aShip, shipsCurrentPlayer)) {
+                shipsCurrentPlayer.add(aShip);
                 return "Ship successfully placed";
             } else {
                 return "Ship cannot overlap with an already placed ship! Try again.";
@@ -44,10 +46,10 @@ public class Game {
 
     }
 
-    public boolean verifyShipPosition(Ship newShip) {
-        if (!this.ships.isEmpty()) {
+    public boolean verifyShipPosition(Ship newShip, List<Ship> ships) {
+        if (!ships.isEmpty()) {
             for (Coordinate coordinate : newShip.getCoordinates()) {
-                for (Ship ship : this.ships) {
+                for (Ship ship : ships) {
                     if (ship.getCoordinates().contains(coordinate)) {
                         return false;
                     }
@@ -61,7 +63,8 @@ public class Game {
         return position <= 10;
     }
 
-    public String render() {
+    public String render(int currentPlayer) {
+        shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
 
         StringBuilder output = new StringBuilder();
         String newLine = System.getProperty("line.separator");
@@ -71,7 +74,7 @@ public class Game {
                 boolean isShipPresent = false;
                 boolean isDamaged = false;
                 boolean isSunk = false;
-                for (Ship ship : this.ships) {
+                for (Ship ship : shipsCurrentPlayer) {
                     for (Coordinate coordinate : ship.getCoordinates()) {
                         if (i == coordinate.getX() && j == coordinate.getY()) {
                             isShipPresent = true;
@@ -102,9 +105,10 @@ public class Game {
         return output.toString();
     }
 
-    public String fire(int x, int y) {
+    public String fire(int x, int y, int currentPlayer) {
+        List<Ship> shipsOtherPlayer = currentPlayer == 1 ? this.shipsPlayer2 : this.shipsPlayer1;
         Coordinate firedAt = new Coordinate(x, y, Icon.SHIP);
-        for (Ship ship : this.ships) {
+        for (Ship ship : shipsOtherPlayer) {
             Set<Coordinate> coordinates = ship.getCoordinates();
             if (coordinates.contains(firedAt)) {
                 Coordinate hit = new Coordinate(x, y, Icon.DAMAGE);
