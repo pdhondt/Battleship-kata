@@ -2,40 +2,46 @@ package be.kunlabora;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Game {
     private List<Ship> ships = new ArrayList<>();
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation) {
-        for (Ship ship : this.ships) {
-            if (ship.getShipType().equals(shipType)) {
-                return "You already placed a ship of this type. Choose another type.";
-            }
-        }
-        Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
-        for (int i = 1; i < aShip.getShipType().getLength(); i++) {
-            if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
-                if (verifyPositionWithinLimits(y + i)) {
-                    aShip.getCoordinates().add(new Coordinate(x, y + i, Icon.SHIP));
-                } else {
-                    return "Ship is too long and exceeds row limits";
+        if (this.ships.size() < 5) {
+            for (Ship ship : this.ships) {
+                if (ship.getShipType().equals(shipType)) {
+                    return "You already placed a ship of this type. Choose another type.";
                 }
             }
-            if (aShip.getOrientation().equals(Orientation.VERTICAL)) {
-                if (verifyPositionWithinLimits(x + i)) {
-                    aShip.getCoordinates().add(new Coordinate(x + i, y, Icon.SHIP));
-                } else {
-                    return "Ship is too long and exceeds column limits";
+            Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
+            for (int i = 1; i < aShip.getShipType().getLength(); i++) {
+                if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
+                    if (verifyPositionWithinLimits(y + i)) {
+                        aShip.getCoordinates().add(new Coordinate(x, y + i, Icon.SHIP));
+                    } else {
+                        return "Ship is too long and exceeds row limits";
+                    }
+                }
+                if (aShip.getOrientation().equals(Orientation.VERTICAL)) {
+                    if (verifyPositionWithinLimits(x + i)) {
+                        aShip.getCoordinates().add(new Coordinate(x + i, y, Icon.SHIP));
+                    } else {
+                        return "Ship is too long and exceeds column limits";
+                    }
                 }
             }
-        }
-        if (verifyShipPosition(aShip)) {
-            this.ships.add(aShip);
-            return "Ship successfully placed";
+            if (verifyShipPosition(aShip)) {
+                this.ships.add(aShip);
+                return "Ship successfully placed";
+            } else {
+                return "Ship cannot overlap with an already placed ship! Try again.";
+            }
         } else {
-            return "Ship cannot overlap with an already placed ship! Try again.";
+            return "All 5 shiptypes have been placed!";
         }
+
     }
 
     public boolean verifyShipPosition(Ship newShip) {
@@ -81,11 +87,9 @@ public class Game {
                 }
                 if (isShipPresent && isSunk) {
                     output.append(Icon.SINK.getIcon());
-                }
-                else if (isShipPresent && isDamaged) {
+                } else if (isShipPresent && isDamaged) {
                     output.append(Icon.DAMAGE.getIcon());
-                }
-                else if (isShipPresent) {
+                } else if (isShipPresent) {
                     output.append(Icon.SHIP.getIcon());
                 } else {
                     output.append(Icon.WAVE.getIcon());

@@ -209,4 +209,21 @@ public class GameTest {
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 """);
     }
+
+    @Test
+    void allShipsPlaced() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL);
+        aGame.placeShip(ShipType.BATTLESHIP, 2, 1, Orientation.HORIZONTAL);
+        aGame.placeShip(ShipType.DESTROYER, 3, 1, Orientation.HORIZONTAL);
+        aGame.placeShip(ShipType.SUBMARINE, 4, 1, Orientation.HORIZONTAL);
+        aGame.placeShip(ShipType.PATROLBOAT, 5, 1, Orientation.HORIZONTAL);
+        String placeShipResult = aGame.placeShip(ShipType.SUBMARINE, 6, 1, Orientation.HORIZONTAL);
+
+        //then
+        Assertions.assertThat(placeShipResult).isEqualTo("All 5 shiptypes have been placed!");
+    }
 }
