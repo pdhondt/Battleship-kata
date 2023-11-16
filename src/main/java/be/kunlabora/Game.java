@@ -142,4 +142,20 @@ public class Game {
         }
         return false;
     }
+
+    public void askUserInput() {
+        System.out.println("Which ship do you want to place? ");
+        Scanner scanner = new Scanner(System.in);
+        String shipToPlace = scanner.nextLine();
+        System.out.println("You want to place a " + shipToPlace);
+        System.out.println("Where do you want to place it? ");
+        System.out.println("Coordinate x: ");
+        int x = scanner.nextInt();
+        System.out.println("Coordinate y: ");
+        int y = scanner.nextInt();
+        System.out.println("Your coordinates are: " + x + "," + y);
+        System.out.println("What is the orientation? ");
+        String orientation = scanner.next();
+        System.out.println("Orientation is " + orientation);
+    }
 }
