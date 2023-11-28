@@ -34,10 +34,9 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        String placeShipResult = aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render(1)).isEqualTo("""
                 🚢🚢🚢🚢🚢🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -58,16 +57,12 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        String placeShipResult1 = aGame.placeShip(ShipType.CARRIER,1, 4, Orientation.HORIZONTAL, 1);
-        String placeShipResult2 = aGame.placeShip(ShipType.DESTROYER,4, 5, Orientation.HORIZONTAL, 1);
-        String placeShipResult3 = aGame.placeShip(ShipType.PATROLBOAT,6, 9, Orientation.HORIZONTAL, 1);
-        String placeShipResult4 = aGame.placeShip(ShipType.SUBMARINE,7, 1, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.CARRIER, 1, 4, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.DESTROYER, 4, 5, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.PATROLBOAT, 6, 9, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.SUBMARINE, 7, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult1).isEqualTo("Ship successfully placed");
-        Assertions.assertThat(placeShipResult2).isEqualTo("Ship successfully placed");
-        Assertions.assertThat(placeShipResult3).isEqualTo("Ship successfully placed");
-        Assertions.assertThat(placeShipResult4).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render(1)).isEqualTo("""
                 🌊🌊🌊🚢🚢🚢🚢🚢🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -88,11 +83,12 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(ShipType.BATTLESHIP,4, 5, Orientation.HORIZONTAL, 1);
+        aGame.placeShip(ShipType.BATTLESHIP, 4, 5, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(aGame.placeShip(ShipType.CARRIER, 4,1, Orientation.HORIZONTAL, 1))
-                .isEqualTo("Ship cannot overlap with an already placed ship! Try again.");
+        Assertions.assertThat(
+                aGame.placeShip(ShipType.CARRIER, 4, 1, Orientation.HORIZONTAL, 1)
+        ).isEqualTo("Warning: Ship cannot overlap with an already placed ship! Try again.");
     }
 
     @Test
@@ -101,10 +97,9 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        String placeShipResult = aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.VERTICAL, 1);
+        aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.VERTICAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult).isEqualTo("Ship successfully placed");
         Assertions.assertThat(aGame.render(1)).isEqualTo("""
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -120,17 +115,32 @@ public class GameTest {
     }
 
     @Test
-    void placeShipCannotExceedOceanLimits() {
+    void placeShipCannotExceedOceanLimitsHorizontally() {
         //given
         Game aGame = new Game();
 
         //when
-        String placeShipResult1 = aGame.placeShip(ShipType.BATTLESHIP, 2,8, Orientation.HORIZONTAL, 1);
-        String placeShipResult2 = aGame.placeShip(ShipType.BATTLESHIP, 8,2, Orientation.VERTICAL, 1);
+        String placeShipResult = aGame.placeShip(ShipType.BATTLESHIP, 2, 8, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult1).isEqualTo("Ship is too long and exceeds row limits");
-        Assertions.assertThat(placeShipResult2).isEqualTo("Ship is too long and exceeds column limits");
+        Assertions.assertThat(placeShipResult).isEqualTo("Warning: Ship is too long and exceeds ocean limits");
+//        Assertions.assertThatThrownBy(() -> {
+//                    aGame.placeShip(ShipType.BATTLESHIP, 2, 8, Orientation.HORIZONTAL, 1);
+//                })
+//                .isInstanceOf(OceanLimitsException.class)
+//                .hasMessage("Ship is too long and exceeds ocean limits");
+    }
+
+    @Test
+    void placeShipCannotExceedOceanLimitsVertically() {
+        //given
+        Game aGame = new Game();
+
+        //when
+        String placeShipResult = aGame.placeShip(ShipType.BATTLESHIP, 8, 2, Orientation.VERTICAL, 1);
+
+        //then
+        Assertions.assertThat(placeShipResult).isEqualTo("Warning: Ship is too long and exceeds ocean limits");
     }
 
     @Test
@@ -139,12 +149,12 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(ShipType.SUBMARINE, 1, 1, Orientation.HORIZONTAL,1);
-        String placeShipResult = aGame.placeShip(ShipType.SUBMARINE, 3, 3, Orientation.VERTICAL, 1);
+        aGame.placeShip(ShipType.SUBMARINE, 1, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult)
-                .isEqualTo("You already placed a ship of this type. Choose another type.");
+        Assertions.assertThat(
+                aGame.placeShip(ShipType.SUBMARINE, 3, 3, Orientation.VERTICAL, 1)
+        ).isEqualTo("Warning: You already placed a ship of this type. Choose another type.");
     }
 
     @Test
@@ -153,20 +163,21 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(ShipType.DESTROYER, 1,1, Orientation.HORIZONTAL, 1);
-        String fireResult = aGame.fire(1,4, 2);
+        aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.HORIZONTAL, 1);
+        String fireResult = aGame.fire(1, 4, 2);
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Miss!");
     }
+
     @Test
     void firingAndHitting() {
         //given
         Game aGame = new Game();
 
         //when
-        aGame.placeShip(ShipType.DESTROYER, 1,1, Orientation.HORIZONTAL, 1);
-        String fireResult = aGame.fire(1,2, 2);
+        aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.HORIZONTAL, 1);
+        String fireResult = aGame.fire(1, 2, 2);
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Hit!");
@@ -221,10 +232,11 @@ public class GameTest {
         aGame.placeShip(ShipType.DESTROYER, 3, 1, Orientation.HORIZONTAL, 1);
         aGame.placeShip(ShipType.SUBMARINE, 4, 1, Orientation.HORIZONTAL, 1);
         aGame.placeShip(ShipType.PATROLBOAT, 5, 1, Orientation.HORIZONTAL, 1);
-        String placeShipResult = aGame.placeShip(ShipType.SUBMARINE, 6, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(placeShipResult).isEqualTo("All 5 shiptypes have been placed!");
+        Assertions.assertThat(
+                aGame.placeShip(ShipType.SUBMARINE, 6, 1, Orientation.HORIZONTAL, 1)
+        ).isEqualTo("Warning: All 5 shiptypes have been placed!");
     }
 
     @Test
