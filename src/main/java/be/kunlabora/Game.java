@@ -1,5 +1,10 @@
 package be.kunlabora;
 
+import be.kunlabora.util.AllShipsPlacedException;
+import be.kunlabora.util.OceanLimitsException;
+import be.kunlabora.util.ShipOverlapException;
+import be.kunlabora.util.ShipTypeException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,59 +14,72 @@ public class Game {
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
     private List<Ship> shipsCurrentPlayer = new ArrayList<>();
+
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
-        shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
-        if (shipsCurrentPlayer.size() < 5) {
-            for (Ship ship : shipsCurrentPlayer) {
-                if (ship.getShipType().equals(shipType)) {
-                    return "You already placed a ship of this type. Choose another type.";
-                }
-            }
+        try {
+            shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+            allShipsPlaced(shipsCurrentPlayer);
+            isShipTypeAvailable(shipsCurrentPlayer, shipType);
             Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
-            for (int i = 1; i < aShip.getShipType().getLength(); i++) {
-                if (aShip.getOrientation().equals(Orientation.HORIZONTAL)) {
-                    if (verifyPositionWithinLimits(y + i)) {
-                        aShip.getCoordinates().add(new Coordinate(x, y + i, Icon.SHIP));
-                    } else {
-                        return "Ship is too long and exceeds row limits";
-                    }
-                }
-                if (aShip.getOrientation().equals(Orientation.VERTICAL)) {
-                    if (verifyPositionWithinLimits(x + i)) {
-                        aShip.getCoordinates().add(new Coordinate(x + i, y, Icon.SHIP));
-                    } else {
-                        return "Ship is too long and exceeds column limits";
-                    }
-                }
-            }
-            if (verifyShipPosition(aShip, shipsCurrentPlayer)) {
-                shipsCurrentPlayer.add(aShip);
-                return "Ship successfully placed";
-            } else {
-                return "Ship cannot overlap with an already placed ship! Try again.";
-            }
-        } else {
-            return "All 5 shiptypes have been placed!";
+            verifyShipCoordinates(aShip, x, y, orientation);
+            isShipOverlapping(aShip, shipsCurrentPlayer);
+            shipsCurrentPlayer.add(aShip);
+            return "Ship successfully placed";
+        } catch (ShipTypeException | OceanLimitsException | ShipOverlapException | AllShipsPlacedException ex) {
+            return "Warning: " + ex.getMessage();
         }
-
     }
 
-    public boolean verifyShipPosition(Ship newShip, List<Ship> ships) {
+    private void verifyShipCoordinates(Ship ship, int x, int y, Orientation orientation) throws OceanLimitsException {
+        for (int i = 1; i < ship.getShipType().getLength(); i++) {
+            if (ship.getOrientation().equals(Orientation.HORIZONTAL)) {
+                if (verifyPositionWithinLimits(y + i)) {
+                    ship.getCoordinates().add(new Coordinate(x, y + i, Icon.SHIP));
+                } else {
+                    throw new OceanLimitsException("Ship is too long and exceeds ocean limits");
+                }
+            }
+            if (ship.getOrientation().equals(Orientation.VERTICAL)) {
+                if (verifyPositionWithinLimits(x + i)) {
+                    ship.getCoordinates().add(new Coordinate(x + i, y, Icon.SHIP));
+                } else {
+                    throw new OceanLimitsException("Ship is too long and exceeds ocean limits");
+                }
+            }
+        }
+    }
+
+
+    private void isShipOverlapping(Ship newShip, List<Ship> ships) throws ShipOverlapException {
         if (!ships.isEmpty()) {
-            for (Coordinate coordinate : newShip.getCoordinates()) {
-                for (Ship ship : ships) {
+            newShip.getCoordinates().forEach(coordinate -> {
+                ships.forEach(ship -> {
                     if (ship.getCoordinates().contains(coordinate)) {
-                        return false;
+                        throw new ShipOverlapException("Ship cannot overlap with an already placed ship! Try again.");
                     }
-                }
-            }
+                });
+            });
         }
-        return true;
     }
 
-    public boolean verifyPositionWithinLimits(int position) {
+    private void allShipsPlaced(List<Ship> ships) throws AllShipsPlacedException {
+        if (ships.size() >= 5) {
+            throw new AllShipsPlacedException("All 5 shiptypes have been placed!");
+        }
+    }
+
+    private boolean verifyPositionWithinLimits(int position) {
         return position <= 10;
     }
+
+    private void isShipTypeAvailable(List<Ship> ships, ShipType shipType) throws ShipTypeException {
+        ships.forEach(ship -> {
+            if (ship.getShipType().equals(shipType)) {
+                throw new ShipTypeException("You already placed a ship of this type. Choose another type.");
+            }
+        });
+    }
+
 
     public String render(int currentPlayer) {
         shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
