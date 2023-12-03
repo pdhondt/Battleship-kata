@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Game {
+    final private int OCEAN_LIMIT = 10;
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
     private List<Ship> shipsCurrentPlayer = new ArrayList<>();
@@ -69,7 +70,7 @@ public class Game {
     }
 
     private boolean verifyPositionWithinLimits(int position) {
-        return position <= 10;
+        return position <= OCEAN_LIMIT;
     }
 
     private void isShipTypeAvailable(List<Ship> ships, ShipType shipType) throws ShipTypeException {
@@ -87,8 +88,8 @@ public class Game {
         StringBuilder output = new StringBuilder();
         String newLine = System.getProperty("line.separator");
 
-        for (int i = 1; i <= 10; i++) {
-            for (int j = 1; j <= 10; j++) {
+        for (int i = 1; i <= OCEAN_LIMIT; i++) {
+            for (int j = 1; j <= OCEAN_LIMIT; j++) {
                 boolean isShipPresent = false;
                 boolean isDamaged = false;
                 boolean isSunk = false;
@@ -115,7 +116,7 @@ public class Game {
                 } else {
                     output.append(Icon.WAVE.getIcon());
                 }
-                if (j == 10) {
+                if (j == OCEAN_LIMIT) {
                     output.append(newLine);
                 }
             }
