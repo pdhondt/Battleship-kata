@@ -1,19 +1,18 @@
 package be.kunlabora;
 
-import be.kunlabora.util.AllShipsPlacedException;
-import be.kunlabora.util.OceanLimitsException;
-import be.kunlabora.util.ShipOverlapException;
-import be.kunlabora.util.ShipTypeException;
+import be.kunlabora.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Game {
     final private int OCEAN_LIMIT = 10;
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
+
+    public List<Ship> getShipsCurrentPlayer() {
+        return shipsCurrentPlayer;
+    }
+
     private List<Ship> shipsCurrentPlayer = new ArrayList<>();
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
@@ -177,19 +176,45 @@ public class Game {
         return countSunken == 17;
     }
 
-    public void askUserInput() {
-        System.out.println("Which ship do you want to place? ");
-        Scanner scanner = new Scanner(System.in);
-        String shipToPlace = scanner.nextLine();
-        System.out.println("You want to place a " + shipToPlace);
-        System.out.println("Where do you want to place it? ");
-        System.out.println("Coordinate x: ");
-        int x = scanner.nextInt();
-        System.out.println("Coordinate y: ");
-        int y = scanner.nextInt();
-        System.out.println("Your coordinates are: " + x + "," + y);
-        System.out.println("What is the orientation? ");
-        String orientation = scanner.next();
-        System.out.println("Orientation is " + orientation);
+    public void askUserInputAndPlaceShips() {
+        try {
+            System.out.println("Which ship do you want to place? ");
+            Scanner scanner = new Scanner(System.in);
+            ShipType shipToPlace = verifyInputAndMapToShipType(scanner.nextLine().toUpperCase());
+            System.out.println("You want to place a " + shipToPlace);
+            System.out.println("Where do you want to place it? ");
+            System.out.println("Coordinate x: ");
+            int x = scanner.nextInt();
+            System.out.println("Coordinate y: ");
+            int y = scanner.nextInt();
+            System.out.println("Your coordinates are: " + x + "," + y);
+            System.out.println("What is the orientation? ");
+            Orientation orientation = verifyInputAndMapToOrientation(scanner.next().toUpperCase());
+            System.out.println("Orientation is " + orientation);
+            System.out.println(this.placeShip(shipToPlace, x, y, orientation, 1));
+        } catch (ShipTypeException | OrientationException ex) {
+            System.out.println(ex.getMessage());
+            askUserInputAndPlaceShips();
+        }
+
+    }
+
+    public ShipType verifyInputAndMapToShipType(String shipInput) throws ShipTypeException {
+        return switch (shipInput) {
+            case "CARRIER" -> ShipType.CARRIER;
+            case "DESTROYER" -> ShipType.DESTROYER;
+            case "BATTLESHIP" -> ShipType.BATTLESHIP;
+            case "SUBMARINE" -> ShipType.SUBMARINE;
+            case "PATROLBOAT" -> ShipType.PATROLBOAT;
+            default -> throw new ShipTypeException("Not a valid ship type");
+        };
+    }
+
+    public Orientation verifyInputAndMapToOrientation(String orientationInput) throws OrientationException {
+        return switch (orientationInput) {
+            case "HORIZONTAL" -> Orientation.HORIZONTAL;
+            case "VERTICAL" -> Orientation.VERTICAL;
+            default -> throw new OrientationException("Not a valid orientation");
+        };
     }
 }
