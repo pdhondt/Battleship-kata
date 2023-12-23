@@ -8,12 +8,10 @@ public class Game {
     final private int OCEAN_LIMIT = 10;
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
-
+    private List<Ship> shipsCurrentPlayer = new ArrayList<>();
     public List<Ship> getShipsCurrentPlayer() {
         return shipsCurrentPlayer;
     }
-
-    private List<Ship> shipsCurrentPlayer = new ArrayList<>();
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
         try {

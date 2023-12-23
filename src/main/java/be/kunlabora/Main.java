@@ -1,9 +1,13 @@
 package be.kunlabora;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         Game battleShip = new Game();
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Rendering the playfield:");
         System.out.println(battleShip.render(1));
         System.out.println("""
                 Welcome to BattleShip.  You can place 5 ships on the playfield, which is
@@ -23,5 +27,14 @@ public class Main {
         }
         System.out.println("All ships successfully placed!");
         System.out.println(battleShip.render(1));
+        System.out.println("Start firing your missiles by entering coordinates!");
+        while (!battleShip.checkWinner(battleShip.getShipsCurrentPlayer())) {
+            System.out.println("Enter x coordinate: ");
+            int x = scanner.nextInt();
+            System.out.println("Enter y coordinate: ");
+            int y = scanner.nextInt();
+            System.out.println(battleShip.fire(x, y, 2));
+            System.out.println(battleShip.render(1));
+        }
     }
 }
