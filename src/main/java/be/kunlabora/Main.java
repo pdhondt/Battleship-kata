@@ -18,7 +18,10 @@ public class Main {
                 indicates the row and the column where you want to place the ship, and the 
                 orientation (HORIZONTAL or VERTICAL)
                 """);
-
-        battleShip.askUserInput();
+        while (battleShip.getShipsCurrentPlayer().size() < 5) {
+            battleShip.askUserInputAndPlaceShips();
+        }
+        System.out.println("All ships successfully placed!");
+        System.out.println(battleShip.render(1));
     }
 }
