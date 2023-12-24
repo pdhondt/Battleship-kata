@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     //TODO 1: make the game playable for 2 players
+    //TODO 2: count the number of hits, misses (and show the number of turns needed)
     public static void main(String[] args) {
         Game battleShip = new Game();
         Scanner scanner = new Scanner(System.in);
@@ -24,20 +25,20 @@ public class Main {
                 indicates the row and the column where you want to place the ship, and the
                 orientation (HORIZONTAL or VERTICAL)
                 """);
-        while (battleShip.getShipsCurrentPlayer().size() < 5) {
+        while (battleShip.getShipsCurrentPlayer(1).size() < 5) {
             battleShip.askUserInputAndPlaceShips();
         }
         System.out.println("All ships successfully placed!");
 
 
         System.out.println("Start firing your missiles by entering coordinates!");
-        while (!battleShip.checkWinner(battleShip.getShipsCurrentPlayer())) {
+        while (!battleShip.checkWinner(battleShip.getShipsCurrentPlayer(1))) {
             System.out.println("Enter x coordinate: ");
             int x = scanner.nextInt();
             System.out.println("Enter y coordinate: ");
             int y = scanner.nextInt();
             System.out.println(battleShip.fire(x, y, 2));
-            System.out.println(battleShip.render(1, false));
+            System.out.println(battleShip.render(2, false));
         }
     }
 }

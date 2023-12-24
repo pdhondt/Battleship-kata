@@ -52,7 +52,7 @@ public class GameTest {
     }
 
     @Test
-    void placeThreeShipsHorizontally() {
+    void placeFourShipsHorizontally() {
         //given
         Game aGame = new Game();
 
@@ -181,8 +181,8 @@ public class GameTest {
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Hit!");
-        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
-                🚢💥🚢🌊🌊🌊🌊🌊🌊🌊
+        Assertions.assertThat(aGame.render(2, false)).isEqualTo("""
+                🌊💥🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -207,7 +207,7 @@ public class GameTest {
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Ship Destroyed and Sinking!");
-        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
+        Assertions.assertThat(aGame.render(2, false)).isEqualTo("""
                 🏊🏊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊

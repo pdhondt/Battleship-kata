@@ -8,12 +8,12 @@ public class Game {
     final private int OCEAN_LIMIT = 10;
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
-    private List<Ship> shipsCurrentPlayer = new ArrayList<>();
-    public List<Ship> getShipsCurrentPlayer() {
-        return shipsCurrentPlayer;
+    public List<Ship> getShipsCurrentPlayer(int currentPlayer) {
+        return currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
     }
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
+        List<Ship> shipsCurrentPlayer;
         try {
             shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
             allShipsPlaced(shipsCurrentPlayer);
@@ -80,7 +80,12 @@ public class Game {
 
 
     public String render(int currentPlayer, boolean renderOwn) {
-        shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+        List<Ship> shipsToRender;
+        if (renderOwn) {
+            shipsToRender = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+        } else {
+            shipsToRender = currentPlayer == 1 ? this.shipsPlayer2 : this.shipsPlayer1;
+        }
 
         StringBuilder output = new StringBuilder();
         String newLine = System.getProperty("line.separator");
@@ -90,7 +95,7 @@ public class Game {
                 boolean isShipPresent = false;
                 boolean isDamaged = false;
                 boolean isSunk = false;
-                for (Ship ship : shipsCurrentPlayer) {
+                for (Ship ship : shipsToRender) {
                     for (Coordinate coordinate : ship.getCoordinates()) {
                         if (i == coordinate.getX() && j == coordinate.getY()) {
                             isShipPresent = true;
