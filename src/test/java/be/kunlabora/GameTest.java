@@ -11,7 +11,7 @@ public class GameTest {
         Game aGame = new Game();
 
         //when
-        String playField = aGame.render(1);
+        String playField = aGame.render(1, true);
 
         //then
         Assertions.assertThat(playField).isEqualTo("""
@@ -37,7 +37,7 @@ public class GameTest {
         aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(aGame.render(1)).isEqualTo("""
+        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
                 🚢🚢🚢🚢🚢🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -63,7 +63,7 @@ public class GameTest {
         aGame.placeShip(ShipType.SUBMARINE, 7, 1, Orientation.HORIZONTAL, 1);
 
         //then
-        Assertions.assertThat(aGame.render(1)).isEqualTo("""
+        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
                 🌊🌊🌊🚢🚢🚢🚢🚢🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -100,7 +100,7 @@ public class GameTest {
         aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.VERTICAL, 1);
 
         //then
-        Assertions.assertThat(aGame.render(1)).isEqualTo("""
+        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🚢🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -181,7 +181,7 @@ public class GameTest {
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Hit!");
-        Assertions.assertThat(aGame.render(1)).isEqualTo("""
+        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
                 🚢💥🚢🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -207,7 +207,7 @@ public class GameTest {
 
         //then
         Assertions.assertThat(fireResult).isEqualTo("Ship Destroyed and Sinking!");
-        Assertions.assertThat(aGame.render(1)).isEqualTo("""
+        Assertions.assertThat(aGame.render(1, true)).isEqualTo("""
                 🏊🏊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊

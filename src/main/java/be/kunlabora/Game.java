@@ -79,7 +79,7 @@ public class Game {
     }
 
 
-    public String render(int currentPlayer) {
+    public String render(int currentPlayer, boolean renderOwn) {
         shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
 
         StringBuilder output = new StringBuilder();
@@ -108,7 +108,7 @@ public class Game {
                     output.append(Icon.SINK.getIcon());
                 } else if (isShipPresent && isDamaged) {
                     output.append(Icon.DAMAGE.getIcon());
-                } else if (isShipPresent) {
+                } else if (isShipPresent && renderOwn) {
                     output.append(Icon.SHIP.getIcon());
                 } else {
                     output.append(Icon.WAVE.getIcon());
