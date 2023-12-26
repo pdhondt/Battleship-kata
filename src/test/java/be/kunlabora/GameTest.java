@@ -165,9 +165,11 @@ public class GameTest {
         //when
         aGame.placeShip(ShipType.DESTROYER, 1, 1, Orientation.HORIZONTAL, 1);
         String fireResult = aGame.fire(1, 4, 2);
+        String fireResult2 = aGame.fire(1, 6, 2);
 
         //then
-        Assertions.assertThat(fireResult).isEqualTo("Miss!");
+        Assertions.assertThat(fireResult).isEqualTo("Miss! Number of misses: 1");
+        Assertions.assertThat(fireResult2).isEqualTo("Miss! Number of misses: 2");
     }
 
     @Test
@@ -180,7 +182,7 @@ public class GameTest {
         String fireResult = aGame.fire(1, 2, 2);
 
         //then
-        Assertions.assertThat(fireResult).isEqualTo("Hit!");
+        Assertions.assertThat(fireResult).isEqualTo("Hit! Number of hits: 1");
         Assertions.assertThat(aGame.render(2, false)).isEqualTo("""
                 🌊💥🌊🌊🌊🌊🌊🌊🌊🌊
                 🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊
@@ -269,6 +271,6 @@ public class GameTest {
         String fireResult = aGame.fire(5, 2, 2);
 
         //then
-        Assertions.assertThat(fireResult).isEqualTo("All ships destroyed, player 2 wins!");
+        Assertions.assertThat(fireResult).isEqualTo("All ships destroyed, player 2 wins, by 17 hits out of 17 attempts!");
     }
 }

@@ -8,8 +8,32 @@ public class Game {
     final private int OCEAN_LIMIT = 10;
     private List<Ship> shipsPlayer1 = new ArrayList<>();
     private List<Ship> shipsPlayer2 = new ArrayList<>();
+    private int hitsPlayer1 = 0;
+    private int hitsPlayer2 = 0;
+    private int missesPlayer1 = 0;
+    private int missesPlayer2 = 0;
     public List<Ship> getShipsCurrentPlayer(int currentPlayer) {
         return currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+    }
+    public int getHitsByPlayer(int currentPlayer) {
+        return currentPlayer == 1 ? this.hitsPlayer1 : this.hitsPlayer2;
+    }
+    public int getMissesByPlayer(int currentPlayer) {
+        return currentPlayer == 1 ? this.missesPlayer1 : this.missesPlayer2;
+    }
+    public void increaseHitsByPlayer(int currentPlayer) {
+        if (currentPlayer == 1) {
+            this.hitsPlayer1++;
+        } else {
+            this.hitsPlayer2++;
+        }
+    }
+    public void increaseMissesByPlayer(int currentPlayer) {
+        if (currentPlayer == 1) {
+            this.missesPlayer1++;
+        } else {
+            this.missesPlayer2++;
+        }
     }
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
@@ -132,21 +156,23 @@ public class Game {
         for (Ship ship : shipsOtherPlayer) {
             Set<Coordinate> coordinates = ship.getCoordinates();
             if (coordinates.contains(firedAt)) {
+                increaseHitsByPlayer(currentPlayer);
                 Coordinate hit = new Coordinate(x, y, Icon.DAMAGE);
                 coordinates.remove(firedAt);
                 coordinates.add(hit);
                 ship.setCoordinates(coordinates);
                 if (checkDestroyed(ship)) {
                     if (checkWinner(shipsOtherPlayer)) {
-                        return "All ships destroyed, player " + currentPlayer + " wins!";
+                        return "All ships destroyed, player " + currentPlayer + " wins, by " + this.getHitsByPlayer(currentPlayer) + " hits out of " + (this.getHitsByPlayer(currentPlayer) + this.getMissesByPlayer(currentPlayer)) + " attempts!";
                     }
                     return "Ship Destroyed and Sinking!";
                 } else {
-                    return "Hit!";
+                    return "Hit! Number of hits: " + this.getHitsByPlayer(currentPlayer);
                 }
             }
         }
-        return "Miss!";
+        increaseMissesByPlayer(currentPlayer);
+        return "Miss! Number of misses: " + this.getMissesByPlayer(currentPlayer);
     }
 
     public boolean checkDestroyed(Ship ship) {
