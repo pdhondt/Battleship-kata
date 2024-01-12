@@ -43,7 +43,7 @@ public class Game {
             fleetCurrentPlayer.allShipsPlaced();
             fleetCurrentPlayer.isShipTypeAvailable(shipType);
             Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
-            verifyShipCoordinates(aShip, x, y, orientation);
+            verifyShipCoordinates(aShip, x, y);
             fleetCurrentPlayer.isShipOverlapping(aShip);
             fleetCurrentPlayer.addShipToFleet(aShip);
             return "Ship successfully placed";
@@ -52,7 +52,7 @@ public class Game {
         }
     }
 
-    private void verifyShipCoordinates(Ship ship, int x, int y, Orientation orientation) throws OceanLimitsException {
+    private void verifyShipCoordinates(Ship ship, int x, int y) throws OceanLimitsException {
         for (int i = 1; i < ship.getShipType().getLength(); i++) {
             if (ship.getOrientation().equals(Orientation.HORIZONTAL)) {
                 if (verifyPositionWithinLimits(y + i)) {
