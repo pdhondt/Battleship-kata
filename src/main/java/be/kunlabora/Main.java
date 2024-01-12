@@ -24,14 +24,14 @@ public class Main {
                 indicates the row and the column where you want to place the ship, and the
                 orientation (HORIZONTAL or VERTICAL)
                 """);
-        while (battleShip.getShipsCurrentPlayer(1).size() < 5) {
+        while (battleShip.getFleetCurrentPlayer(1).getFleetSize() < 5) {
             battleShip.askUserInputAndPlaceShips();
         }
         System.out.println("All ships successfully placed!");
 
 
         System.out.println("Start firing your missiles by entering coordinates!");
-        while (!battleShip.checkWinner(battleShip.getShipsCurrentPlayer(1))) {
+        while (!battleShip.getFleetCurrentPlayer(1).checkWinner()) {
             System.out.println("Enter x coordinate: ");
             int x = scanner.nextInt();
             System.out.println("Enter y coordinate: ");

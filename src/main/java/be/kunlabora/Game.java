@@ -6,14 +6,14 @@ import java.util.*;
 
 public class Game {
     final private int OCEAN_LIMIT = 10;
-    private List<Ship> shipsPlayer1 = new ArrayList<>();
-    private List<Ship> shipsPlayer2 = new ArrayList<>();
+    private final Fleet fleetPlayer1 = new Fleet();
+    private final Fleet fleetPlayer2 = new Fleet();
     private int hitsPlayer1 = 0;
     private int hitsPlayer2 = 0;
     private int missesPlayer1 = 0;
     private int missesPlayer2 = 0;
-    public List<Ship> getShipsCurrentPlayer(int currentPlayer) {
-        return currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+    public Fleet getFleetCurrentPlayer(int currentPlayer) {
+        return currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
     }
     public int getHitsByPlayer(int currentPlayer) {
         return currentPlayer == 1 ? this.hitsPlayer1 : this.hitsPlayer2;
@@ -37,15 +37,15 @@ public class Game {
     }
 
     public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
-        List<Ship> shipsCurrentPlayer;
+        Fleet fleetCurrentPlayer;
         try {
-            shipsCurrentPlayer = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
-            allShipsPlaced(shipsCurrentPlayer);
-            isShipTypeAvailable(shipsCurrentPlayer, shipType);
+            fleetCurrentPlayer = currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
+            fleetCurrentPlayer.allShipsPlaced();
+            fleetCurrentPlayer.isShipTypeAvailable(shipType);
             Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
             verifyShipCoordinates(aShip, x, y, orientation);
-            isShipOverlapping(aShip, shipsCurrentPlayer);
-            shipsCurrentPlayer.add(aShip);
+            fleetCurrentPlayer.isShipOverlapping(aShip);
+            fleetCurrentPlayer.addShipToFleet(aShip);
             return "Ship successfully placed";
         } catch (ShipTypeException | OceanLimitsException | ShipOverlapException | AllShipsPlacedException ex) {
             return "Warning: " + ex.getMessage();
@@ -71,44 +71,16 @@ public class Game {
         }
     }
 
-
-    private void isShipOverlapping(Ship newShip, List<Ship> ships) throws ShipOverlapException {
-        if (!ships.isEmpty()) {
-            newShip.getCoordinates().forEach(coordinate -> {
-                ships.forEach(ship -> {
-                    if (ship.getCoordinates().contains(coordinate)) {
-                        throw new ShipOverlapException("Ship cannot overlap with an already placed ship! Try again.");
-                    }
-                });
-            });
-        }
-    }
-
-    private void allShipsPlaced(List<Ship> ships) throws AllShipsPlacedException {
-        if (ships.size() >= 5) {
-            throw new AllShipsPlacedException("All 5 shiptypes have been placed!");
-        }
-    }
-
     private boolean verifyPositionWithinLimits(int position) {
         return position <= OCEAN_LIMIT;
     }
 
-    private void isShipTypeAvailable(List<Ship> ships, ShipType shipType) throws ShipTypeException {
-        ships.forEach(ship -> {
-            if (ship.getShipType().equals(shipType)) {
-                throw new ShipTypeException("You already placed a ship of this type. Choose another type.");
-            }
-        });
-    }
-
-
     public String render(int currentPlayer, boolean renderOwn) {
-        List<Ship> shipsToRender;
+        Fleet fleetToRender;
         if (renderOwn) {
-            shipsToRender = currentPlayer == 1 ? this.shipsPlayer1 : this.shipsPlayer2;
+            fleetToRender = currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
         } else {
-            shipsToRender = currentPlayer == 1 ? this.shipsPlayer2 : this.shipsPlayer1;
+            fleetToRender = currentPlayer == 1 ? this.fleetPlayer2 : this.fleetPlayer1;
         }
 
         StringBuilder output = new StringBuilder();
@@ -119,7 +91,7 @@ public class Game {
                 boolean isShipPresent = false;
                 boolean isDamaged = false;
                 boolean isSunk = false;
-                for (Ship ship : shipsToRender) {
+                for (Ship ship : fleetToRender.getShips()) {
                     for (Coordinate coordinate : ship.getCoordinates()) {
                         if (i == coordinate.getX() && j == coordinate.getY()) {
                             isShipPresent = true;
@@ -151,9 +123,9 @@ public class Game {
     }
 
     public String fire(int x, int y, int currentPlayer) {
-        List<Ship> shipsOtherPlayer = currentPlayer == 1 ? this.shipsPlayer2 : this.shipsPlayer1;
+        Fleet fleetOtherPlayer = currentPlayer == 1 ? this.fleetPlayer2 : this.fleetPlayer1;
         Coordinate firedAt = new Coordinate(x, y, Icon.SHIP);
-        for (Ship ship : shipsOtherPlayer) {
+        for (Ship ship : fleetOtherPlayer.getShips()) {
             Set<Coordinate> coordinates = ship.getCoordinates();
             if (coordinates.contains(firedAt)) {
                 this.increaseHitsByPlayer(currentPlayer);
@@ -163,7 +135,7 @@ public class Game {
                 coordinates.add(hit);
                 ship.setCoordinates(coordinates);
                 if (ship.checkDestroyed()) {
-                    if (checkWinner(shipsOtherPlayer)) {
+                    if (fleetOtherPlayer.checkWinner()) {
                         return "All ships destroyed, player " + currentPlayer + " wins, by " + this.getHitsByPlayer(currentPlayer) + " hits out of " + (this.getHitsByPlayer(currentPlayer) + this.getMissesByPlayer(currentPlayer)) + " attempts!";
                     }
                     return "Ship Destroyed and Sinking!";
@@ -174,18 +146,6 @@ public class Game {
         }
         this.increaseMissesByPlayer(currentPlayer);
         return "Miss! Number of misses: " + this.getMissesByPlayer(currentPlayer);
-    }
-
-    public boolean checkWinner(List<Ship> ships) {
-        int countSunken = 0;
-        for (Ship ship : ships) {
-            for (Coordinate coordinate : ship.getCoordinates()) {
-                if (coordinate.getStatus().equals(Icon.SINK)) {
-                    countSunken++;
-                }
-            }
-        }
-        return countSunken == 17;
     }
 
     public void askUserInputAndPlaceShips() {
