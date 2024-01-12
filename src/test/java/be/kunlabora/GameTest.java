@@ -245,6 +245,7 @@ public class GameTest {
     void checkWinner() {
         //given
         Game aGame = new Game();
+        aGame.getCurrentPlayer(2).setName("Peter");
         aGame.placeShip(ShipType.CARRIER, 1, 1, Orientation.HORIZONTAL, 1);
         aGame.placeShip(ShipType.BATTLESHIP, 2, 1, Orientation.HORIZONTAL, 1);
         aGame.placeShip(ShipType.DESTROYER, 3, 1, Orientation.HORIZONTAL, 1);
@@ -271,6 +272,6 @@ public class GameTest {
         String fireResult = aGame.fire(5, 2, 2);
 
         //then
-        Assertions.assertThat(fireResult).isEqualTo("All ships destroyed, player 2 wins, by 17 hits out of 17 attempts!");
+        Assertions.assertThat(fireResult).isEqualTo("All ships destroyed, player Peter wins, by 17 hits out of 17 attempts!");
     }
 }

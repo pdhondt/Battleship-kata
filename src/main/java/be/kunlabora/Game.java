@@ -6,46 +6,22 @@ import java.util.*;
 
 public class Game {
     final private int OCEAN_LIMIT = 10;
-    private final Fleet fleetPlayer1 = new Fleet();
-    private final Fleet fleetPlayer2 = new Fleet();
-    private int hitsPlayer1 = 0;
-    private int hitsPlayer2 = 0;
-    private int missesPlayer1 = 0;
-    private int missesPlayer2 = 0;
-    public Fleet getFleetCurrentPlayer(int currentPlayer) {
-        return currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
-    }
-    public int getHitsByPlayer(int currentPlayer) {
-        return currentPlayer == 1 ? this.hitsPlayer1 : this.hitsPlayer2;
-    }
-    public int getMissesByPlayer(int currentPlayer) {
-        return currentPlayer == 1 ? this.missesPlayer1 : this.missesPlayer2;
-    }
-    public void increaseHitsByPlayer(int currentPlayer) {
-        if (currentPlayer == 1) {
-            this.hitsPlayer1++;
-        } else {
-            this.hitsPlayer2++;
-        }
-    }
-    public void increaseMissesByPlayer(int currentPlayer) {
-        if (currentPlayer == 1) {
-            this.missesPlayer1++;
-        } else {
-            this.missesPlayer2++;
-        }
+    private final Player player1 = new Player();
+    private final Player player2 = new Player();
+
+    public Player getCurrentPlayer(int playerNumber) {
+        return playerNumber == 1 ? player1 : player2;
     }
 
-    public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int currentPlayer) {
-        Fleet fleetCurrentPlayer;
+    public String placeShip(ShipType shipType, int x, int y, Orientation orientation, int playerNumber) {
+        Player currentPlayer = getCurrentPlayer(playerNumber);
         try {
-            fleetCurrentPlayer = currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
-            fleetCurrentPlayer.allShipsPlaced();
-            fleetCurrentPlayer.isShipTypeAvailable(shipType);
+            currentPlayer.getFleet().allShipsPlaced();
+            currentPlayer.getFleet().isShipTypeAvailable(shipType);
             Ship aShip = new Ship(shipType, new Coordinate(x, y, Icon.SHIP), orientation);
             verifyShipCoordinates(aShip, x, y);
-            fleetCurrentPlayer.isShipOverlapping(aShip);
-            fleetCurrentPlayer.addShipToFleet(aShip);
+            currentPlayer.getFleet().isShipOverlapping(aShip);
+            currentPlayer.getFleet().addShipToFleet(aShip);
             return "Ship successfully placed";
         } catch (ShipTypeException | OceanLimitsException | ShipOverlapException | AllShipsPlacedException ex) {
             return "Warning: " + ex.getMessage();
@@ -75,12 +51,12 @@ public class Game {
         return position <= OCEAN_LIMIT;
     }
 
-    public String render(int currentPlayer, boolean renderOwn) {
+    public String render(int playerNumber, boolean renderOwn) {
         Fleet fleetToRender;
         if (renderOwn) {
-            fleetToRender = currentPlayer == 1 ? this.fleetPlayer1 : this.fleetPlayer2;
+            fleetToRender = playerNumber == 1 ? player1.getFleet() : player2.getFleet();
         } else {
-            fleetToRender = currentPlayer == 1 ? this.fleetPlayer2 : this.fleetPlayer1;
+            fleetToRender = playerNumber == 1 ? player2.getFleet() : player1.getFleet();
         }
 
         StringBuilder output = new StringBuilder();
@@ -122,30 +98,31 @@ public class Game {
         return output.toString();
     }
 
-    public String fire(int x, int y, int currentPlayer) {
-        Fleet fleetOtherPlayer = currentPlayer == 1 ? this.fleetPlayer2 : this.fleetPlayer1;
+    public String fire(int x, int y, int playerNumber) {
+        Player currentPlayer = getCurrentPlayer(playerNumber);
+        Player otherPlayer = getCurrentPlayer(playerNumber == 1 ? 2 : 1);
         Coordinate firedAt = new Coordinate(x, y, Icon.SHIP);
-        for (Ship ship : fleetOtherPlayer.getShips()) {
+        for (Ship ship : otherPlayer.getFleet().getShips()) {
             Set<Coordinate> coordinates = ship.getCoordinates();
             if (coordinates.contains(firedAt)) {
-                this.increaseHitsByPlayer(currentPlayer);
+                currentPlayer.increaseHits();
                 ship.increaseHitCount();
                 Coordinate hit = new Coordinate(x, y, Icon.DAMAGE);
                 coordinates.remove(firedAt);
                 coordinates.add(hit);
                 ship.setCoordinates(coordinates);
                 if (ship.checkDestroyed()) {
-                    if (fleetOtherPlayer.checkWinner()) {
-                        return "All ships destroyed, player " + currentPlayer + " wins, by " + this.getHitsByPlayer(currentPlayer) + " hits out of " + (this.getHitsByPlayer(currentPlayer) + this.getMissesByPlayer(currentPlayer)) + " attempts!";
+                    if (otherPlayer.getFleet().checkWinner()) {
+                        return "All ships destroyed, player " + currentPlayer.getName() + " wins, by " + currentPlayer.getHits() + " hits out of " + (currentPlayer.getHits() + currentPlayer.getMisses()) + " attempts!";
                     }
                     return "Ship Destroyed and Sinking!";
                 } else {
-                    return "Hit! Number of hits: " + this.getHitsByPlayer(currentPlayer);
+                    return "Hit! Number of hits: " + currentPlayer.getHits();
                 }
             }
         }
-        this.increaseMissesByPlayer(currentPlayer);
-        return "Miss! Number of misses: " + this.getMissesByPlayer(currentPlayer);
+        currentPlayer.increaseMisses();
+        return "Miss! Number of misses: " + currentPlayer.getMisses();
     }
 
     public void askUserInputAndPlaceShips() {

@@ -12,6 +12,9 @@ public class Main {
 
         System.out.println("Rendering the playfield:");
         System.out.println(battleShip.render(1, true));
+        System.out.println("Welcome player 1.  Please enter your name: ");
+        String namePlayer1 = scanner.nextLine();
+        battleShip.getCurrentPlayer(1).setName(namePlayer1);
         System.out.println("""
                 Welcome to BattleShip.  You can place 5 ships on the playfield, which is
                 a 10x10 ocean.  Each ship can only be placed once.  The different ships are, together
@@ -25,14 +28,16 @@ public class Main {
                 indicates the row and the column where you want to place the ship, and the
                 orientation (HORIZONTAL or VERTICAL)
                 """);
-        while (battleShip.getFleetCurrentPlayer(1).getFleetSize() < 5) {
+        while (battleShip.getCurrentPlayer(1).getFleet().getFleetSize() < 5) {
             battleShip.askUserInputAndPlaceShips();
         }
         System.out.println("All ships successfully placed!");
 
-
-        System.out.println("Start firing your missiles by entering coordinates!");
-        while (!battleShip.getFleetCurrentPlayer(1).checkWinner()) {
+        System.out.println("Welcome player 2.  Please enter your name: ");
+        String namePlayer2 = scanner.nextLine();
+        battleShip.getCurrentPlayer(2).setName(namePlayer2);
+        System.out.println(namePlayer2 + ", start firing your missiles by entering coordinates!");
+        while (!battleShip.getCurrentPlayer(1).getFleet().checkWinner()) {
             System.out.println("Enter x coordinate: ");
             int x = scanner.nextInt();
             System.out.println("Enter y coordinate: ");
