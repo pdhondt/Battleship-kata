@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     //TODO 1: make the game playable for 2 players
+    //TODO 2: make the same player fire a second time if the first attempt is a hit
     public static void main(String[] args) {
         Game battleShip = new Game();
         Scanner scanner = new Scanner(System.in);
