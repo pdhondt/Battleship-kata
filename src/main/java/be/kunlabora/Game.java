@@ -156,12 +156,13 @@ public class Game {
         for (Ship ship : shipsOtherPlayer) {
             Set<Coordinate> coordinates = ship.getCoordinates();
             if (coordinates.contains(firedAt)) {
-                increaseHitsByPlayer(currentPlayer);
+                this.increaseHitsByPlayer(currentPlayer);
+                ship.increaseHitCount();
                 Coordinate hit = new Coordinate(x, y, Icon.DAMAGE);
                 coordinates.remove(firedAt);
                 coordinates.add(hit);
                 ship.setCoordinates(coordinates);
-                if (checkDestroyed(ship)) {
+                if (ship.checkDestroyed()) {
                     if (checkWinner(shipsOtherPlayer)) {
                         return "All ships destroyed, player " + currentPlayer + " wins, by " + this.getHitsByPlayer(currentPlayer) + " hits out of " + (this.getHitsByPlayer(currentPlayer) + this.getMissesByPlayer(currentPlayer)) + " attempts!";
                     }
@@ -171,26 +172,8 @@ public class Game {
                 }
             }
         }
-        increaseMissesByPlayer(currentPlayer);
+        this.increaseMissesByPlayer(currentPlayer);
         return "Miss! Number of misses: " + this.getMissesByPlayer(currentPlayer);
-    }
-
-    public boolean checkDestroyed(Ship ship) {
-        int hitCount = 0;
-        Set<Coordinate> coordinates = ship.getCoordinates();
-        for (Coordinate coordinate : coordinates) {
-            if (coordinate.getStatus().equals(Icon.DAMAGE)) {
-                hitCount++;
-            }
-        }
-        if (hitCount == ship.getShipType().getLength()) {
-            for (Coordinate coordinate : coordinates) {
-                coordinate.setStatus(Icon.SINK);
-            }
-            ship.setCoordinates(coordinates);
-            return true;
-        }
-        return false;
     }
 
     public boolean checkWinner(List<Ship> ships) {
