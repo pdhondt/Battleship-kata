@@ -22,6 +22,9 @@ public class Player {
         return misses;
     }
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty or null");
+        }
         this.name = name;
     }
 

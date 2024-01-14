@@ -125,6 +125,18 @@ public class Game {
         return "Miss! Number of misses: " + currentPlayer.getMisses();
     }
 
+    public void askPlayerName(int playerNumber) {
+        try {
+            System.out.println("Welcome player " + playerNumber + ". Please enter your name: ");
+            Scanner scanner = new Scanner(System.in);
+            String playerName = scanner.nextLine();
+            this.getCurrentPlayer(playerNumber).setName(playerName);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+            askPlayerName(playerNumber);
+        }
+    }
+
     public void askUserInputAndPlaceShips() {
         try {
             System.out.println("Which ship do you want to place? ");

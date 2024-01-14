@@ -6,15 +6,15 @@ public class Main {
 
     //TODO 1: make the game playable for 2 players
     //TODO 2: make the same player fire a second time if the first attempt is a hit
+    //TODO 3: improve handling of incorrect input (e.g. coordinates not within ocean limits)
+    //TODO 4: avoid program crashes when a coordinate input is not a number
     public static void main(String[] args) {
         Game battleShip = new Game();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Rendering the playfield:");
         System.out.println(battleShip.render(1, true));
-        System.out.println("Welcome player 1.  Please enter your name: ");
-        String namePlayer1 = scanner.nextLine();
-        battleShip.getCurrentPlayer(1).setName(namePlayer1);
+        battleShip.askPlayerName(1);
         System.out.println("""
                 Welcome to BattleShip.  You can place 5 ships on the playfield, which is
                 a 10x10 ocean.  Each ship can only be placed once.  The different ships are, together
@@ -33,10 +33,8 @@ public class Main {
         }
         System.out.println("All ships successfully placed!");
 
-        System.out.println("Welcome player 2.  Please enter your name: ");
-        String namePlayer2 = scanner.nextLine();
-        battleShip.getCurrentPlayer(2).setName(namePlayer2);
-        System.out.println(namePlayer2 + ", start firing your missiles by entering coordinates!");
+        battleShip.askPlayerName(2);
+        System.out.println(battleShip.getCurrentPlayer(2).getName() + ", start firing your missiles by entering coordinates!");
         while (!battleShip.getCurrentPlayer(1).getFleet().checkWinner()) {
             System.out.println("Enter x coordinate: ");
             int x = scanner.nextInt();
