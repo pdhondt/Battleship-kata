@@ -150,19 +150,19 @@ public class Game {
 
     public ShipType verifyInputAndMapToShipType(String shipInput) throws ShipTypeException {
         return switch (shipInput) {
-            case "CARRIER" -> ShipType.CARRIER;
-            case "DESTROYER" -> ShipType.DESTROYER;
-            case "BATTLESHIP" -> ShipType.BATTLESHIP;
-            case "SUBMARINE" -> ShipType.SUBMARINE;
-            case "PATROLBOAT" -> ShipType.PATROLBOAT;
+            case "C" -> ShipType.CARRIER;
+            case "D" -> ShipType.DESTROYER;
+            case "B" -> ShipType.BATTLESHIP;
+            case "S" -> ShipType.SUBMARINE;
+            case "P" -> ShipType.PATROLBOAT;
             default -> throw new ShipTypeException("Not a valid ship type");
         };
     }
 
     public Orientation verifyInputAndMapToOrientation(String orientationInput) throws OrientationException {
         return switch (orientationInput) {
-            case "HORIZONTAL" -> Orientation.HORIZONTAL;
-            case "VERTICAL" -> Orientation.VERTICAL;
+            case "H" -> Orientation.HORIZONTAL;
+            case "V" -> Orientation.VERTICAL;
             default -> throw new OrientationException("Not a valid orientation");
         };
     }

@@ -24,9 +24,9 @@ public class Main {
                 * DESTROYER(3)
                 * SUBMARINE(3)
                 * PATROLBOAT(2)
-                You place a ship by passing the type, the starting coordinate (e.g. 3, 4), which
+                You place a ship by passing the first letter of the ship type, the starting coordinate (e.g. 3, 4), which
                 indicates the row and the column where you want to place the ship, and the
-                orientation (HORIZONTAL or VERTICAL)
+                orientation (H for HORIZONTAL or V for VERTICAL)
                 """);
         while (battleShip.getCurrentPlayer(1).getFleet().getFleetSize() < 5) {
             battleShip.askUserInputAndPlaceShips();
